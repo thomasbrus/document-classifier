@@ -6,9 +6,9 @@ module NaiveBayesClassifier
 
       # Separate punctuation (except for periods) from words.
       [/(^|[[:space:]])(')/u, '\1\2'],
-      [/(?=[\("`{\[:;&#*@])(.)/, '\1 '],
+      [/(?=[\("`{\[:;&#*@~])(.)/, '\1 '],
 
-      [/(.)(?=[?!\)";}\]*:@'])|(?=[\)}\]])(.)|(.)(?=[({\[])|((^|[[:space:]])-)(?=[^-])/u, '\1 '],
+      [/(.)(?=[?!\)";}\]*:@'~])|(?=[\)}\]])(.)|(.)(?=[({\[])|((^|[[:space:]])-)(?=[^-])/u, '\1 '],
 
       # Treat double-hyphen as a single token.
       [/([^-])(--+)([^-])/, '\1 \2 \3'],
@@ -44,7 +44,10 @@ module NaiveBayesClassifier
       [/N 'T( |$)/, " N'T\\1"],
 
       # Treebank tokenizer special words
-      [/([Cc])annot/, '\1an not']
+      [/([Cc])annot/, '\1an not'],
+
+      # Throw away any punctation used
+      [/[%^&*()-=!@#$_+|;:",.<>?~]/, ''],
     ]
 
     def tokenize(s)
