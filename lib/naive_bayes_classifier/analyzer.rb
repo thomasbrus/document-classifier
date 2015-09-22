@@ -8,22 +8,27 @@ module NaiveBayesClassifier
     end
 
     def ngrams(n)
-      token_ngrams(n).reduce(Hash.new(0)) do |hsh, ngram|
-        hsh[ngram] += 1
-        hsh
-      end
+      token_ngrams(n).reduce(Hash.new(0)) { |hsh, ngram| hsh[ngram] += 1; hsh }
     end
 
     def unigrams
-      ngrams(1)
+      @unigrams ||= ngrams(1)
     end
 
     def bigrams
-      ngrams(2)
+      @bigrams ||= ngrams(2)
     end
 
     def trigrams
-      ngrams(3)
+      @trigrams ||= ngrams(3)
+    end
+
+    def frequency_of(word)
+      unigrams.fetch([normalize(word)])
+    end
+
+    def word_count
+      @tokens.count
     end
 
     private def token_ngrams(n)
