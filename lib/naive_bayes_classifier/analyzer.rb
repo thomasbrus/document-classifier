@@ -3,8 +3,10 @@ module NaiveBayesClassifier
     include Tokenizer
     include Normalizer
 
-    def initialize(corpus)
-      @tokens = tokenize(corpus)
+    def initialize(corpus, vocabulary: nil)
+      @tokens = tokenize(corpus).select do |token|
+        vocabulary.nil? || vocabulary.include?(normalize(token))
+      end
     end
 
     def ngrams(n)
