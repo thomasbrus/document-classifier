@@ -36,7 +36,7 @@ module NaiveBayesClassifier
     end
 
     private def normalized_tokens
-      normalize(@tokens)
+      @tokens.map(&method(:normalize))
     end
   end
 end
