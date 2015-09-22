@@ -47,7 +47,7 @@ module NaiveBayesClassifier
       [/([Cc])annot/, '\1an not'],
 
       # Throw away any punctation used
-      [/[%^&*()-=!@#$_+|;:",.<>?~]/, ''],
+      [/([{^&*{}()\/\\=!@#$+|;:",.<>?~]|\s[-\_]\s)/, ''],
     ]
 
     def tokenize(s)
