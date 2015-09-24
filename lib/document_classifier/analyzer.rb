@@ -1,4 +1,4 @@
-module NaiveBayesClassifier
+class DocumentClassifier
   class Analyzer
     include Tokenizer
     include Normalizer
@@ -27,6 +27,8 @@ module NaiveBayesClassifier
 
     def frequency_of(word)
       unigrams.fetch([normalize(word)])
+    rescue KeyError
+      0
     end
 
     def word_count

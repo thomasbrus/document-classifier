@@ -1,6 +1,6 @@
 require 'set'
 
-module NaiveBayesClassifier
+class DocumentClassifier
   class Vocabulary
     include Normalizer
 
@@ -14,6 +14,10 @@ module NaiveBayesClassifier
 
     def include?(word)
       @words.include?(word)
+    end
+
+    def size
+      @words.count
     end
   end
 end

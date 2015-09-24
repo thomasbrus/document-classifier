@@ -1,16 +1,16 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'naive_bayes_classifier/version'
+require 'document_classifier/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "naive_bayes_classifier"
-  spec.version       = NaiveBayesClassifier::VERSION
+  spec.name          = "document_classifier"
+  spec.version       = DocumentClassifier::VERSION
   spec.authors       = ["Thomas Brus"]
   spec.email         = ["thomas.brus@me.com"]
 
-  spec.summary       = %q{A simple Naive Bayes classifier.}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = %q{A simple Naive Bayes document classifier.}
+  spec.homepage      = "https://github.com/thomasbrus/document-classifier"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or

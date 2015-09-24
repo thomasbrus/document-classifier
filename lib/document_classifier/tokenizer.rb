@@ -1,4 +1,4 @@
-module NaiveBayesClassifier
+class DocumentClassifier
   module Tokenizer
     @@tokenize_regexps = [
       # Uniform Quotes
