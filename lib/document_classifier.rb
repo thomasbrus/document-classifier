@@ -1,8 +1,6 @@
 require "document_classifier/version"
 require "document_classifier/normalizer"
 require "document_classifier/tokenizer"
-require "document_classifier/vocabulary"
-require "document_classifier/document"
 require "document_classifier/analyzer"
 
 class DocumentClassifier
