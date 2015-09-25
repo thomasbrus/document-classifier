@@ -53,8 +53,8 @@ class DocumentClassifier
 
   private def tokenize(text, &block)
     tokenizer = Tokenizer.new(text) do |tokenizer_config|
-      # tokenizer_config.ignore_words = ignore_words unless ignore_words.nil?
-      # tokenizer_config.stop_words = stop_words unless ignore_words.nil?
+      tokenizer_config.ignore_words = ignore_words unless ignore_words.nil?
+      tokenizer_config.stop_words = stop_words unless ignore_words.nil?
     end
 
     tokenizer.each_word(&block)
