@@ -1,6 +1,9 @@
 class DocumentClassifier
-  module Tokenizer
-    @@tokenize_regexps = [
+  class Tokenizer
+    extend Memoist
+    include Normalization
+
+    @@regexps = [
       # Uniform Quotes
       [/''|``|“|”/, '"'],
 
@@ -50,8 +53,29 @@ class DocumentClassifier
       [/([{^&*{}()\/\\=!@#$+|;:",.<>?~]|\s[-\_]\s)/, ''],
     ]
 
-    def tokenize(s)
-      @@tokenize_regexps.reduce(s) { |str, rules| str.gsub(rules[0], rules[1]) }.split
+    attr_reader :text
+    attr_accessor :ignore_words, :stop_words
+
+    def initialize(text, &block)
+      @text, @ignore_words, @stop_words = text, [], []
+      yield(self) if block_given?
+    end
+
+    def words
+      normalized_tokens - ignore_words - stop_words
+    end
+
+    def each_word(&block)
+      return to_enum(:each_word) unless block_given?
+      words.each(&block)
+    end
+
+    private memoize def tokens
+      @@regexps.reduce(@text) { |str, rules| str.gsub(rules[0], rules[1]) }.split
+    end
+
+    private memoize def normalized_tokens
+      tokens.map(&method(:normalize))
     end
   end
 end

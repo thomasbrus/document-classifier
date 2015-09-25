@@ -1,38 +1,36 @@
 class DocumentClassifier
   class Analyzer
-    include Tokenizer
-    include Normalizer
+    extend Memoist
+    include Normalization
 
-    def initialize(corpus, vocabulary: nil)
-      @tokens = tokenize(corpus).select do |token|
-        vocabulary.nil? || vocabulary.include?(normalize(token))
-      end
-    end
-
-    def ngrams(n)
-      token_ngrams(n).reduce(Hash.new(0)) { |hsh, ngram| hsh[ngram] += 1; hsh }
+    def initialize(tokens)
+      @tokens = tokens
     end
 
     def unigrams
-      @unigrams ||= ngrams(1)
+      ngrams(1)
     end
 
     def bigrams
-      @bigrams ||= ngrams(2)
+      ngrams(2)
     end
 
     def trigrams
-      @trigrams ||= ngrams(3)
+      ngrams(3)
     end
 
-    def frequency_of(word)
-      unigrams.fetch([normalize(word)])
+    def frequency(token)
+      unigrams.fetch([token])
     rescue KeyError
       0
     end
 
-    def word_count
+    def token_count
       @tokens.count
+    end
+
+    private memoize def ngrams(n)
+      token_ngrams(n).reduce(Hash.new(0)) { |hsh, ngram| hsh[ngram] += 1; hsh }
     end
 
     private def token_ngrams(n)
