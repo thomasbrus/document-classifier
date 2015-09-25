@@ -1,5 +1,5 @@
 require "document_classifier/version"
-require "document_classifier/normalizer"
+require "document_classifier/normalization"
 require "document_classifier/tokenizer"
 require "document_classifier/analyzer"
 

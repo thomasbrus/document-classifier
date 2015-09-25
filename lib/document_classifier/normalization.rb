@@ -1,5 +1,5 @@
 class DocumentClassifier
-  module Normalizer
+  module Normalization
     def normalize(token)
       token.downcase.strip
     end
