@@ -65,6 +65,10 @@ class DocumentClassifier
       normalized_tokens - ignore_words - stop_words
     end
 
+    def word_count
+      words.count
+    end
+
     def each_word(&block)
       return to_enum(:each_word) unless block_given?
       words.each(&block)

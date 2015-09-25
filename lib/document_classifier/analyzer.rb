@@ -1,10 +1,11 @@
 class DocumentClassifier
   class Analyzer
     extend Memoist
-    include Normalization
 
-    def initialize(tokens)
-      @tokens = tokens
+    attr_reader :words
+
+    def initialize(words)
+      @words = words
     end
 
     def unigrams
@@ -19,26 +20,18 @@ class DocumentClassifier
       ngrams(3)
     end
 
-    def frequency(token)
-      unigrams.fetch([token])
+    def frequency(word)
+      unigrams.fetch([word])
     rescue KeyError
       0
     end
 
-    def token_count
-      @tokens.count
+    def word_count
+      words.count
     end
 
     private memoize def ngrams(n)
-      token_ngrams(n).reduce(Hash.new(0)) { |hsh, ngram| hsh[ngram] += 1; hsh }
-    end
-
-    private def token_ngrams(n)
-      normalized_tokens.each_cons(n)
-    end
-
-    private def normalized_tokens
-      @tokens.map(&method(:normalize))
+      words.each_cons(n).reduce(Hash.new(0)) { |hsh, ngram| hsh[ngram] += 1; hsh }
     end
   end
 end
