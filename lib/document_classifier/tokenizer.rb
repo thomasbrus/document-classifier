@@ -26,9 +26,6 @@ class DocumentClassifier
       # Separate "No.6"
       [/(^[[:upper:]]^[[:lower:]]\.)(\d+)/, '\1 \2'],
 
-      # Md. or MD. for Ruby 1.8
-      [/M[d|D]./, '\1'],
-
       # Separate words from ellipses
       [/([^\.]|^)(\.{2,})(.?)/, '\1 \2 \3'],
       [/(^|[[:space:]])(\.{2,})([^\.[:space:]])/u, '\1\2 \3'],
@@ -36,21 +33,13 @@ class DocumentClassifier
 
       ##### Some additional fixes.
 
-      # Fix %, $, &
+      # Fix %, $,£
       [/(\d)%/, '\1 %'],
       [/\$(\.?\d)/, '$ \1'],
-      [/(^[[:lower:]]^[[:upper:]])& (^[[:lower:]]^[[:upper:]])/u, '\1&\2'],
-      [/(^[[:lower:]]^[[:upper:]]+)&(^[[:lower:]]^[[:upper:]]+)/u, '\1 & \2'],
+      [/£(\.?\d)/, '£ \1'],
 
-      # Fix (n 't) -> ( n't)
-      [/n 't( |$)/, " n't\\1"],
-      [/N 'T( |$)/, " N'T\\1"],
-
-      # Treebank tokenizer special words
-      [/([Cc])annot/, '\1an not'],
-
-      # Throw away any punctation used
-      [/([{^&*{}()\/\\=!@#$+|;:",.<>?~]|\s[-\_]\s)/, ''],
+      # Throw away any punctation and weird characters used
+      [/([{^&*{}()\/\\=!@#$+|;:",.<>?~—□□–]|\s[-\_]|[-\_]\s)/, ''],
     ]
 
     attr_reader :text
