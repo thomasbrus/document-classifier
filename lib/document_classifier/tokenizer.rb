@@ -3,44 +3,42 @@ class DocumentClassifier
     extend Memoist
     include Normalization
 
-    @@regexps = [
+    @@regexps = {
       # Uniform Quotes
-      [/''|``|“|”/, '"'],
+      /''|``|“|”/ => '"',
 
       # Separate punctuation (except for periods) from words.
-      [/(^|[[:space:]])(')/u, '\1\2'],
-      [/(?=[\("`{\[:;&#*@~])(.)/, '\1 '],
+      /(^|[[:space:]])(')/u => '\1\2',
+      /(?=[\("`{\[:;&#*@~])(.)/ => '\1 ',
 
-      [/(.)(?=[?!\)";}\]*:@'~])|(?=[\)}\]])(.)|(.)(?=[({\[])|((^|[[:space:]])-)(?=[^-])/u, '\1 '],
+      /(.)(?=[?!\)";}\]*:@'~])|(?=[\)}\]])(.)|(.)(?=[({\[])|((^|[[:space:]])-)(?=[^-])/u => '\1 ',
 
       # Treat double-hyphen as a single token.
-      [/([^-])(--+)([^-])/, '\1 \2 \3'],
-      [/([[:space:]]|^)(,)(?=(^[[:space:]]))/u, '\1\2 '],
+      /([^-])(--+)([^-])/ => '\1 \2 \3',
+      /([[:space:]]|^)(,)(?=(^[[:space:]]))/u => '\1\2 ',
 
       # Only separate a comma if a space follows.
-      [/(.)(,)([[:space:]]|$)/u, '\1 \2\3'],
+      /(.)(,)([[:space:]]|$)/u => '\1 \2\3',
 
       # Combine dots separated by whitespace to be a single token.
-      [/\.[[:space:]]\.[[:space:]]\./u, '...'],
+      /\.[[:space:]]\.[[:space:]]\./u => '...',
 
       # Separate "No.6"
-      [/(^[[:upper:]]^[[:lower:]]\.)(\d+)/, '\1 \2'],
+      /(^[[:upper:]]^[[:lower:]]\.)(\d+)/ => '\1 \2',
 
       # Separate words from ellipses
-      [/([^\.]|^)(\.{2,})(.?)/, '\1 \2 \3'],
-      [/(^|[[:space:]])(\.{2,})([^\.[:space:]])/u, '\1\2 \3'],
-      [/(^|[[:space:]])(\.{2,})([^\.[:space:]])/u, '\1 \2\3'],
-
-      ##### Some additional fixes.
+      /([^\.]|^)(\.{2,})(.?)/ => '\1 \2 \3',
+      /(^|[[:space:]])(\.{2,})([^\.[:space:]])/u => '\1\2 \3',
+      /(^|[[:space:]])(\.{2,})([^\.[:space:]])/u => '\1 \2\3',
 
       # Fix %, $,£
-      [/(\d)%/, '\1 %'],
-      [/\$(\.?\d)/, '$ \1'],
-      [/£(\.?\d)/, '£ \1'],
+      /(\d)%/ => '\1 %',
+      /\$(\.?\d)/ => '$ \1',
+      /£(\.?\d)/ => '£ \1',
 
       # Throw away any punctation and weird characters used
-      [/([{^&*{}()\/\\=!@#$+|;:",.<>?~—□□¤™•·–]|\s[-\_]|[-\_]\s)/, ''],
-    ]
+      /([{^&*{}()\/\\=!@#$+|;:",.<>?~—□□¤™•·–]|\s[-\_]|[-\_]\s)/ => '',
+    }
 
     attr_reader :text
     attr_accessor :ignore_words, :stop_words
@@ -63,12 +61,10 @@ class DocumentClassifier
       words.each(&block)
     end
 
-    private memoize def tokens
-      @@regexps.reduce(@text) { |str, rules| str.gsub(rules[0], rules[1]) }.split
-    end
-
     private memoize def normalized_tokens
-      tokens.map(&method(:normalize))
+      @@regexps.reduce(@text) { |str, (pattern, replacement)|
+        normalize(str.gsub(pattern, replacement))
+      }.split
     end
   end
 end
