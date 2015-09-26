@@ -39,7 +39,7 @@ class DocumentClassifier
       [/£(\.?\d)/, '£ \1'],
 
       # Throw away any punctation and weird characters used
-      [/([{^&*{}()\/\\=!@#$+|;:",.<>?~—□□–]|\s[-\_]|[-\_]\s)/, ''],
+      [/([{^&*{}()\/\\=!@#$+|;:",.<>?~—□□¤™•·–]|\s[-\_]|[-\_]\s)/, ''],
     ]
 
     attr_reader :text
