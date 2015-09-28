@@ -24,7 +24,7 @@ class DocumentClassifier
 
   def train(category, text)
     tokenize(text) { |word| @frequencies.fetch(category)[word] += 1 }
-    flush_cache(:vocabulary_size, :number_of_words, :total_number_of_words)
+    flush_cache(:number_of_words, :number_of_unique_words, :total_number_of_unique_words)
   end
 
   def classify(text)
@@ -45,19 +45,21 @@ class DocumentClassifier
     @frequencies.fetch(category)[word]
   end
 
-  private memoize def vocabulary_size
-    categories.reduce(0) do |count, category|
-      count + @frequencies.fetch(category).count
-    end
-  end
-
   private memoize def number_of_words(category)
     @frequencies.fetch(category).values.reduce(:+)
   end
 
-  private memoize def total_number_of_words
-    categories.reduce(0) { |count, category| count + number_of_words(category) }
+  private memoize def number_of_unique_words(category)
+    @frequencies.fetch(category).count
   end
+
+  private memoize def total_number_of_unique_words
+    categories.reduce(0) do |count, category|
+      count + number_of_unique_words(category)
+    end
+  end
+
+  alias_method :vocabulary_size, :total_number_of_unique_words
 
   private def tokenize(text, &block)
     tokenizer(text).each_word(&block)
